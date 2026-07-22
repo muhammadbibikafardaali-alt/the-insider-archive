@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE INSIDER · Field Guides</title>
+<meta name="description" content="مجموعة الأدلّة الميدانيّة الكاملة من THE INSIDER — برمجة، سايبر، AI، وأكتر.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ========================================
+     THE INSIDER · BRAND SYSTEM v1.0
+     ======================================== */
+  :root {
+    --signal-orange: #E8620A;
+    --hot-orange:    #FF7A20;
+    --void-black:    #070E14;
+    --deep-navy:     #0D1A24;
+    --slate-dark:    #122233;
+    --steel-blue:    #1A2C3D;
+    --off-white:     #E8E2D9;
+    --muted-stone:   #A8A29E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--void-black);
+    color: var(--off-white);
+    font-family: 'Cairo', 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: var(--signal-orange); text-decoration: none; }
+
+  /* ---- Grid background overlay ---- */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,98,10,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,98,10,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Orange glow at top center */
+  .glow-orb {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(232,98,10,0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  main { position: relative; z-index: 1; }
+
+  /* ---- Corner brackets frame ---- */
+  .corner-frame {
+    position: fixed;
+    width: 30px; height: 30px;
+    border: 1px solid rgba(232,98,10,0.4);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .corner-frame.tl { top: 20px; right: 20px; border-left: 0; border-bottom: 0; }
+  .corner-frame.tr { top: 20px; left: 20px;  border-right: 0; border-bottom: 0; }
+  .corner-frame.bl { bottom: 20px; right: 20px; border-left: 0; border-top: 0; }
+  .corner-frame.br { bottom: 20px; left: 20px;  border-right: 0; border-top: 0; }
+
+  /* ========================================
+     HEADER · LOGO
+     ======================================== */
+  header {
+    padding: 60px 24px 20px;
+    text-align: center;
+    position: relative;
+  }
+  .logo-hex {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 22px;
+  }
+  .logo-hex svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 16px rgba(232,98,10,0.6));
+  }
+  .badge {
+    display: inline-block;
+    border: 1px solid var(--signal-orange);
+    color: var(--signal-orange);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    padding: 5px 14px;
+    background: rgba(232,98,10,0.05);
+    margin-bottom: 20px;
+  }
+  h1.brand-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(46px, 8vw, 72px);
+    letter-spacing: 1px;
+    line-height: 1;
+    color: var(--off-white);
+  }
+  h1.brand-title .accent { color: var(--signal-orange); }
+  .authority-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--signal-orange);
+    letter-spacing: 5px;
+    margin-top: 10px;
+  }
+  .subtitle {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    color: var(--signal-orange);
+    font-size: 22px;
+    margin-top: 26px;
+    letter-spacing: 3px;
+  }
+  .intro-desc {
+    max-width: 620px;
+    margin: 22px auto 0;
+    color: var(--muted-stone);
+    font-size: 14.5px;
+    line-height: 2;
+    padding: 0 20px;
+  }
+  .intro-desc strong { color: var(--off-white); }
+
+  /* Live stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: clamp(20px, 5vw, 50px);
+    margin-top: 40px;
+    direction: ltr;
+    flex-wrap: wrap;
+    padding: 0 20px;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--signal-orange);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted-stone);
+    font-size: 9.5px;
+    letter-spacing: 2.5px;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  /* ========================================
+     RESOURCES SECTION LABEL
+     ======================================== */
+  .section-tag-wrap {
+    text-align: center;
+    margin: 70px 0 28px;
+    position: relative;
+  }
+  .section-tag-wrap::before,
+  .section-tag-wrap::after {
+    content: '';
+    display: inline-block;
+    width: 80px;
+    height: 1px;
+    background: rgba(232,98,10,0.4);
+    vertical-align: middle;
+    margin: 0 12px;
+  }
+  .section-tag {
+    display: inline-block;
+    background: rgba(232,98,10,0.12);
+    border: 1px solid rgba(232,98,10,0.4);
+    color: var(--signal-orange);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    padding: 6px 16px;
+    vertical-align: middle;
+  }
+
+  /* ========================================
+     RESOURCES GRID
+     ======================================== */
+  .resources-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .resource-card {
+    background: var(--deep-navy);
+    border: 1px solid rgba(232,98,10,0.2);
+    padding: 22px 22px 20px;
+    position: relative;
+    transition: all 0.28s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    overflow: hidden;
+  }
+  /* Left-side orange accent bar (RTL: right side) */
+  .resource-card::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--signal-orange);
+    transform: scaleY(0.3);
+    transform-origin: top;
+    transition: transform 0.35s ease;
+  }
+  .resource-card:hover {
+    background: var(--slate-dark);
+    border-color: var(--signal-orange);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(232,98,10,0.18);
+  }
+  .resource-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    direction: ltr;
+  }
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--signal-orange);
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+  .card-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--signal-orange);
+    background: rgba(232,98,10,0.10);
+    padding: 3px 9px;
+    border: 1px solid rgba(232,98,10,0.30);
+    letter-spacing: 1.5px;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--off-white);
+    line-height: 1.3;
+    margin-bottom: 6px;
+    direction: ltr;
+    text-align: left;
+  }
+  .card-title-ar {
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    color: var(--signal-orange);
+    font-size: 15px;
+    margin-bottom: 12px;
+    direction: rtl;
+    text-align: right;
+    line-height: 1.5;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted-stone);
+    line-height: 1.75;
+    flex: 1;
+    direction: rtl;
+  }
+  .card-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(232,98,10,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    direction: ltr;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted-stone);
+    letter-spacing: 1.5px;
+  }
+  .card-footer .open-drive {
+    color: var(--signal-orange);
+    font-weight: 700;
+    transition: transform 0.2s ease;
+  }
+  .resource-card:hover .open-drive {
+    transform: translateX(-4px);
+  }
+
+  /* ========================================
+     FOOTER
+     ======================================== */
+  footer {
+    text-align: center;
+    padding: 60px 24px 50px;
+    border-top: 1px solid rgba(232,98,10,0.15);
+    margin-top: 40px;
+    position: relative;
+  }
+  footer .footer-hex {
+    width: 40px; height: 40px;
+    margin: 0 auto 18px;
+  }
+  footer .footer-hex svg { width: 100%; height: 100%; }
+  footer .terminal-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--signal-orange);
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+  }
+  footer .brand-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted-stone);
+  }
+  footer .brand-line .accent { color: var(--signal-orange); }
+  footer .handle {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--off-white);
+  }
+  footer .handle .dot { color: var(--signal-orange); margin: 0 8px; }
+  footer .end-tag {
+    margin-top: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(232,98,10,0.4);
+    letter-spacing: 2.5px;
+  }
+
+  /* Cursor blink animation */
+  .cursor {
+    display: inline-block;
+    animation: blink 1.05s infinite;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* Mobile tweaks */
+  @media (max-width: 640px) {
+    header { padding: 40px 20px 15px; }
+    .corner-frame { width: 22px; height: 22px; }
+    .corner-frame.tl, .corner-frame.tr { top: 12px; }
+    .corner-frame.bl, .corner-frame.br { bottom: 12px; }
+    .corner-frame.tl, .corner-frame.bl { right: 12px; }
+    .corner-frame.tr, .corner-frame.br { left: 12px; }
+    .resources-grid { grid-template-columns: 1fr; gap: 14px; padding: 0 16px 40px; }
+    .section-tag-wrap::before, .section-tag-wrap::after { width: 30px; }
+    .stats-bar { gap: 26px; }
+    .stat-num { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="glow-orb"></div>
+
+<div class="corner-frame tl"></div>
+<div class="corner-frame tr"></div>
+<div class="corner-frame bl"></div>
+<div class="corner-frame br"></div>
+
+<!-- Reusable logo (hexagon + diamond + eye) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="hex" viewBox="0 0 100 100">
+      <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5"
+               fill="none" stroke="#E8620A" stroke-width="2.5"/>
+      <polygon points="50,25 70,50 50,75 30,50"
+               fill="none" stroke="#E8620A" stroke-width="2"/>
+      <circle cx="50" cy="50" r="5" fill="#E8620A"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="logo-hex"><svg><use href="#hex"/></svg></div>
+    <div class="badge">FIELD GUIDES · V1.0</div>
+    <h1 class="brand-title">THE <span class="accent">INSIDER</span></h1>
+    <div class="authority-tag">// THE AUTHORITY //</div>
+    <div class="subtitle">مكتبة المصادر</div>
+
+    <p class="intro-desc">
+      كل الأدلّة الميدانيّة اللي عملناها بمكان واحد.
+      <strong>برمجة، سايبر، AI، داتا، وأكتر</strong> — كل PDF بضغطة وحدة
+      بينفتح على الـ Drive جاهز للقراءة أو التحميل.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num" id="stat-guides">08</div>
+        <div class="stat-label">Guides</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">AR</div>
+        <div class="stat-label">Language</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$0</div>
+        <div class="stat-label">Cost</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">PDF</div>
+        <div class="stat-label">Format</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= SECTION LABEL ================= -->
+  <div class="section-tag-wrap">
+    <span class="section-tag">RESOURCES · ARCHIVE</span>
+  </div>
+
+  <!-- ================= RESOURCES GRID (rendered by JS) ================= -->
+  <div class="resources-grid" id="resources-grid">
+    <!-- cards injected here -->
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="footer-hex"><svg><use href="#hex"/></svg></div>
+    <div class="terminal-line">&gt; ACCESS_GRANTED_<span class="cursor">_</span></div>
+    <div class="brand-line">THE <span class="accent">INSIDER</span> · الداخل</div>
+    <div class="handle"><span class="dot">·</span>@muhammadbibi.cc<span class="dot">·</span></div>
+    <div class="end-tag">// END OF ARCHIVE</div>
+  </footer>
+
+</main>
+
+<script>
+  /* ============================================================
+     🔧 ADD A NEW RESOURCE HERE
+     ============================================================
+     To add a new field guide, copy any object below and paste
+     a new one into the array. Just fill in the 5 fields:
+
+     {
+       title:   "English name shown in card",
+       titleAr: "الاسم بالعربي",
+       tag:     "SHORT TAG",  // e.g., "AI", "CYBER", "PM"
+       desc:    "وصف قصير بالعربي — سطر أو سطرين",
+       url:     "https://drive.google.com/file/d/..."
+     }
+
+     The card number (01, 02, ...) is auto-generated.
+     ============================================================ */
+
+  const RESOURCES = [
+    {
+      title:   "AI Guide",
+      titleAr: "دليل الذكاء الاصطناعي",
+      tag:     "AI",
+      desc:    "١٤ تكتيك لاستخدام الذكاء الاصطناعي بالكوديج والـ IT — كيف تسأل، تتعلّم، وتخلّي AI يشتغل معك.",
+      url:     "https://drive.google.com/file/d/1TzyqctXEp9hss7BmjhDlYUqP2CUVTuFl/view?usp=drivesdk"
+    },
+    {
+      title:   "Linux Commands",
+      titleAr: "كوماندات لينكس",
+      tag:     "LINUX",
+      desc:    "٦٤ كوماند لينكس أساسي مع شرح كامل — من فتح الترمينال لأمور الـ cybersecurity المتقدّمة.",
+      url:     "https://drive.google.com/file/d/13bZ6knAzQFJqsA777coks9BH6SrtVTpe/view?usp=drivesdk"
+    },
+    {
+      title:   "Programming Fundamentals",
+      titleAr: "أساسيّات البرمجة",
+      tag:     "CODE",
+      desc:    "أساسيّات البرمجة من الصفر — Python، مع مشروع آلة حاسبة عملي وخارطة طريق ٣٠ يوم.",
+      url:     "https://drive.google.com/file/d/1ghGdq5Et2Npknpqmh_f53IMZOwvau70Q/view?usp=drivesdk"
+    },
+    {
+      title:   "30 Free Resources",
+      titleAr: "٣٠ مصدر مجاني للتعلّم",
+      tag:     "LEARN",
+      desc:    "أفضل ٣٠ مصدر مجاني للتعلّم من Amazon، Google، Microsoft، NVIDIA، Harvard، وfreeCodeCamp.",
+      url:     "https://drive.google.com/file/d/12bx-N0NmSjQH5tFF9jZRL-SiYM7Xk6kZ/view?usp=drivesdk"
+    },
+    {
+      title:   "Offensive Security",
+      titleAr: "الأمن الهجومي",
+      tag:     "RED",
+      desc:    "دليل المهارات الهجوميّة بسوق ٢٠٢٦ — ١٢ مهارة، ١٥ أداة، ١٢ منصّة تدريب، و٤ شهادات pentest.",
+      url:     "https://drive.google.com/file/d/1ni1fy3ZREtzNFzUInJfEQXtpAunA5Gqx/view?usp=drivesdk"
+    },
+    {
+      title:   "Blue Team · Defense",
+      titleAr: "الأمن الدفاعي",
+      tag:     "BLUE",
+      desc:    "دليل المدافعين بـ SOC، Incident Response، و Threat Hunting — ١٢ مهارة، ١٥ أداة، و٤ شهادات.",
+      url:     "https://drive.google.com/file/d/1YHDFU931KRrx6mZSA92IcrJSJv41FJWw/view?usp=drivesdk"
+    },
+    {
+      title:   "Burp Suite Mastery",
+      titleAr: "إتقان Burp Suite",
+      tag:     "WEB",
+      desc:    "دليل إتقان الأداة #١ بـ web pentesting — ١٢ مهارة، ١٠ extensions، و PortSwigger Academy path لشهادة BSCP.",
+      url:     "https://drive.google.com/file/d/19Ildgvy_2kmLMKvNa3Ezkmswlq-ORKNu/view?usp=drivesdk"
+    },
+    {
+      title:   "SOC Operations",
+      titleAr: "عمليّات مركز الأمن",
+      tag:     "SOC",
+      desc:    "دليل الـ Security Operations Center — ٣ tiers، ١٢ مهارة، ٦ KPIs، و ٤ certifications لشغل SOC حقيقي.",
+      url:     "https://drive.google.com/file/d/1zTuFl7YxLP1ke6vMLNjjITYShn00o9gH/view?usp=drivesdk"
+    }
+    // ➕ Add more resources here — just paste a new { … } object
+  ];
+
+  /* ------------ Renderer (don't edit unless you know CSS) ------------ */
+  function renderResources() {
+    const grid = document.getElementById('resources-grid');
+    const html = RESOURCES.map((r, i) => {
+      const num = String(i + 1).padStart(2, '0');
+      return `
+        <a class="resource-card" href="${r.url}" target="_blank" rel="noopener">
+          <div class="card-head">
+            <span class="card-num">${num}</span>
+            <span class="card-tag">${r.tag}</span>
+          </div>
+          <div class="card-title">${r.title}</div>
+          <div class="card-title-ar">${r.titleAr}</div>
+          <div class="card-desc">${r.desc}</div>
+          <div class="card-footer">
+            <span>PDF · GOOGLE DRIVE</span>
+            <span class="open-drive">OPEN →</span>
+          </div>
+        </a>
+      `;
+    }).join('');
+    grid.innerHTML = html;
+
+    // Update the guides count in the stats bar
+    document.getElementById('stat-guides').textContent =
+      String(RESOURCES.length).padStart(2, '0');
+  }
+
+  renderResources();
+</script>
+
+</body>
+</html>
